@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>CATTI 二级笔译核心词汇站</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- 字体 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #1f4fa3;
+  --bg: #f5f7fb;
+}
+body {
+  margin: 0;
+  font-family: "Noto Sans SC", system-ui, sans-serif;
+  background: var(--bg);
+  color: #222;
+}
+header {
+  background: var(--primary);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  background: white;
+  padding: 0.8rem;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05);
+}
+nav button {
+  border: none;
+  background: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+}
+nav button.active {
+  border-bottom: 2px solid var(--primary);
+  font-weight: bold;
+}
+input[type="search"] {
+  width: 90%;
+  max-width: 500px;
+  display: block;
+  margin: 1rem auto;
+  padding: 0.6rem;
+  font-size: 1rem;
+}
+section {
+  max-width: 900px;
+  margin: auto;
+  padding: 1rem;
+}
+details {
+  background: white;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05);
+}
+summary {
+  font-weight: bold;
+  cursor: pointer;
+}
+.en {
+  color: #1f4fa3;
+  font-style: italic;
+}
+footer {
+  text-align: center;
+  font-size: 0.85rem;
+  padding: 2rem;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>CATTI 二级笔译 · 核心考点词汇站</h1>
+  <p>国务院官网英文表述 · 分类 · 可搜索</p>
+</header>
+
+<nav id="nav">
+  <button data-cat="all" class="active">全部</button>
+  <button data-cat="politics">时政外交</button>
+  <button data-cat="economy">经济社会</button>
+  <button data-cat="culture">文化教育</button>
+  <button data-cat="tech">科技环保</button>
+</nav>
+
+<input type="search" id="search" placeholder="搜索中文或英文关键词…" />
+
+<section id="content"></section>
+
+<footer>
+  <p>国务院标准英文翻译来源：</p>
+  <p><a href="https://www.gov.cn" target="_blank">中华人民共和国中央人民政府（www.gov.cn）</a></p>
+</footer>
+
+<script>
+const data = [
+  // ===== 时政外交（国务院标准）=====
+  {
+    cat: "politics",
+    zh: "国务院",
+    en: "the State Council of the People's Republic of China"
+  },
+  {
+    cat: "politics",
+    zh: "总理",
+    en: "Premier of the State Council"
+  },
+  {
+    cat: "politics",
+    zh: "外交部",
+    en: "Ministry of Foreign Affairs"
+  },
+  {
+    cat: "politics",
+    zh: "白皮书",
+    en: "white paper"
+  },
+  {
+    cat: "politics",
+    zh: "人类命运共同体",
+    en: "a community with a shared future for mankind"
+  },
+
+  // ===== 经济社会 =====
+  {
+    cat: "economy",
+    zh: "一带一路倡议",
+    en: "the Belt and Road Initiative"
+  },
+  {
+    cat: "economy",
+    zh: "供给侧结构性改革",
+    en: "supply-side structural reform"
+  },
+  {
+    cat: "economy",
+    zh: "高质量发展",
+    en: "high-quality development"
+  },
+
+  // ===== 文化教育 =====
+  {
+    cat: "culture",
+    zh: "中华优秀传统文华",
+    en: "fine traditional Chinese culture"
+  },
+  {
+    cat: "culture",
+    zh: "义务教育",
+    en: "compulsory education"
+  },
+
+  // ===== 科技环保 =====
+  {
+    cat: "tech",
+    zh: "碳中和",
+    en: "carbon neutrality"
+  },
+  {
+    cat: "tech",
+    zh: "碳达峰",
+    en: "carbon peaking"
+  },
+  {
+    cat: "tech",
+    zh: "人工智能",
+    en: "artificial intelligence"
+  }
+];
+
+const nav = document.getElementById("nav");
+const search = document.getElementById("search");
+const content = document.getElementById("content");
+
+function render(cat, keyword) {
+  content.innerHTML = "";
+  data
+    .filter(d =>
+      (cat === "all" || d.cat === cat) &&
+      (!keyword ||
+        d.zh.includes(keyword) ||
+        d.en.toLowerCase().includes(keyword.toLowerCase()))
+    )
+    .forEach(d => {
+      const el = document.createElement("details");
+      el.innerHTML = `
+        <summary>${d.zh}</summary>
+        <p class="en">${d.en}</p>
+      `;
+      content.appendChild(el);
+    });
+}
+
+nav.addEventListener("click", e => {
+  if (e.target.tagName !== "BUTTON") return;
+  nav.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+  e.target.classList.add("active");
+  render(e.target.dataset.cat, search.value);
+});
+
+search.addEventListener("input", () => {
+  const active = document.querySelector("#nav button.active").dataset.cat;
+  render(active, search.value);
+});
+
+render("all");
+</script>
+
+</body>
+</html>
